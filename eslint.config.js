@@ -24,6 +24,12 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // 日本語UIの見出しに全角スペース（　）を意図的に使うため、
+      // 文字列・テンプレート・JSXテキスト・コメント中は許可する
+      'no-irregular-whitespace': [
+        'error',
+        { skipStrings: true, skipTemplates: true, skipJSXText: true, skipComments: true },
+      ],
     },
   },
 ])
