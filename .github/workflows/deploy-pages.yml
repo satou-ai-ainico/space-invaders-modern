@@ -38,10 +38,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Pages はリポジトリ設定で「Source: GitHub Actions」を一度だけ有効化しておく必要がある
+      # （Actions のトークンでは初回自動作成ができないため）
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
