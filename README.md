@@ -1,16 +1,41 @@
-# React + Vite
+# 現地調査 入力アシスト（新人ガイド型・全部位スキャン）
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+リフォーム現地調査のヒアリング／調査の**抜け漏れをゼロにする**ための、新人向けタブレット入力UIのプロトタイプです。
+要件定義 [`docs/genchi_hearing_tatakidai_v4.md`](docs/genchi_hearing_tatakidai_v4.md) の内容を、実際に動く React アプリとして実装しています。
 
-Currently, two official plugins are available:
+## 満たしている2つの大前提
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. **新人でも漏れなく収集**：システムが順に「これを確認しましょう」とガイド。各項目に新人ガイド（判断めやす・用語・質問文・見本写真枠）。
+2. **対象外でもアップセル確認**：全部位で「設置年数・劣化・型番（現況仕様）」の3点を必須化。トイレだけの依頼でも追加提案のタネを取りこぼしません。
 
-## React Compiler
+## 主な機能
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **ガイド型ウィザード**：開始 → 第1部ヒアリング → 第2部 全部位スキャン（水回り5＋内装3）→ 第3部 建物現況 → 第4部 段取り・記録 → 完了前サマリー。
+- **全部位スキャンの完了ゲート**：8部位の対象判定＋アップセル診断3点、対象部位の詳細・写真、写真もれ防止リストがすべて埋まるまで「調査完了」不可。
+- **条件分岐**：物件種別＝マンションで管理規約・遮音等級等が出現／築1981以前で耐震項目が必須化。
+- **アップセルの芽を自動抽出**：設置年数が寿命めやす超過、または劣化「要注意」の部位を提案候補として自動ピックアップ。
+- **完了前サマリー**：未入力必須・撮り忘れ写真をタップで該当項目へジャンプ。完了時は台帳転記データ（JSON）をプレビュー。
+- **自動保存**（localStorage）／ライト・ダークテーマ対応／タブレット最適化。
 
-## Expanding the ESLint configuration
+## 開発
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev      # 開発サーバ
+npm run build    # 本番ビルド
+npm run lint     # ESLint
+```
+
+## ディレクトリ構成
+
+```
+src/
+  data/surveyModel.js   … v4 準拠の項目・ガイド・寿命めやす・条件分岐の定義
+  lib/helpers.js        … 空判定・必須判定・アップセルの芽判定
+  components/           … Header / Field / GuidePanel / PartScan / Summary
+  App.jsx               … ウィザード制御・完了ゲート・サマリー計算
+docs/
+  genchi_hearing_tatakidai_v4.md … 要件定義 v4（現行シート9枚の実項目を反映）
+```
+
+> ※新人ガイドの見本写真・スクリプト本文・寿命めやすの数値は現状プレースホルダ／一般値です。御社の既存スプレッドシート・実績で拡充していく前提です。
